@@ -1,0 +1,17 @@
+spring:
+  data:
+   mongodb:
+    uri: mongodb://10.1.1.231:27017/testdb
+  application:
+    name: mongo-test
+  profiles:
+    active: dev
+  cloud:
+    config:
+      name: mongo-test
+      uri: http://10.1.2.5:9002
+      profile: hystrix,eureka,rabbitmq,mongodb,redis,basic
+      label: master
+feign:
+  hystrix:
+    enabled: true
