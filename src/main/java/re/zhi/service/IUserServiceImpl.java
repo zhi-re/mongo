@@ -34,6 +34,11 @@ public class IUserServiceImpl implements IUser {
     @Autowired
     private ToAnalysis toAnalysis;
 
+    /**
+     * 先分词，再插入操作
+     *
+     * @param map
+     */
     @Override
     public void insert(Map map) {
         String id = map.get("id").toString();
@@ -51,11 +56,22 @@ public class IUserServiceImpl implements IUser {
         mongoTemplate.insert(user);
     }
 
+    /**
+     * 查询全部
+     *
+     * @return
+     */
     @Override
     public List<UserMongo> findAll() {
         return mongoTemplate.findAll(UserMongo.class);
     }
 
+    /**
+     * 按条件查询
+     *
+     * @param map
+     * @return
+     */
     @Override
     public List<UserMongo> findByConditions(Map map) {
 
@@ -74,6 +90,12 @@ public class IUserServiceImpl implements IUser {
         return list;
     }
 
+    /**
+     * 文本分词查询
+     *
+     * @param map
+     * @return
+     */
     @Override
     public List<UserMongo> textSearch(Map map) {
         Query query = new Query();
@@ -85,6 +107,12 @@ public class IUserServiceImpl implements IUser {
         return userMongoList;
     }
 
+    /**
+     * 更新
+     *
+     * @param map
+     * @return
+     */
     @Override
     public boolean update(Map map) {
         Query query = new Query(Criteria.where("id").is(map.get("id")));
@@ -99,6 +127,12 @@ public class IUserServiceImpl implements IUser {
 
     }
 
+    /**
+     * 删除
+     *
+     * @param map
+     * @return
+     */
     @Override
     public boolean delete(Map map) {
         Query query = new Query(Criteria.where("id").is(map.get("id")));
