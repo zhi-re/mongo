@@ -11,8 +11,8 @@ import org.springframework.data.mongodb.core.mapping.Document;
 
 @Data
 @ToString
-@Document
-@CompoundIndexes(@CompoundIndex(name="id_1_name_1_age",def="{'id':1,'name':1,'age':-1}"))
+@Document // 标注在实体类上，类似于hibernate的entity注解，标明由mongo来维护该表。
+@CompoundIndexes(@CompoundIndex(name="id_1_name_1_age",def="{'id':1,'name':1,'age':-1}")) // 复合索引，加复合索引后通过复合索引字段查询将提高速度 1为正序，-1为倒序
 public class UserMongo {
 
     private String id;
