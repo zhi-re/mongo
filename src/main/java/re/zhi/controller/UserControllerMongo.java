@@ -92,4 +92,16 @@ public class UserControllerMongo {
         boolean b = iUser.delete(map);
         return b;
     }
+
+    /**
+     * 聚合查询
+     *
+     * @param map
+     * @return
+     */
+    @RequestMapping("findByAggregation")
+    public String findByAggregation(@RequestBody() Map map) {
+        iUser.findByAggregation(map);
+        return "OK";
+    }
 }

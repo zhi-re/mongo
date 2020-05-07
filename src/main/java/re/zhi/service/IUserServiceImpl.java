@@ -9,6 +9,9 @@ import org.ansj.splitWord.analysis.ToAnalysis;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.aggregation.Aggregation;
+import org.springframework.data.mongodb.core.aggregation.AggregationOperation;
+import org.springframework.data.mongodb.core.aggregation.AggregationResults;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.TextCriteria;
@@ -18,6 +21,7 @@ import re.zhi.pojo.UserMongo;
 
 
 import javax.annotation.Resource;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -52,6 +56,7 @@ public class IUserServiceImpl implements IUser {
         user.setName(name);
         user.setAge(age);
         user.setContent(jsonObject);
+        user.setSource((Integer) map.get("source"));
         setSearchText(user);
         mongoTemplate.insert(user);
     }
@@ -138,6 +143,21 @@ public class IUserServiceImpl implements IUser {
         Query query = new Query(Criteria.where("id").is(map.get("id")));
         mongoTemplate.remove(query, UserMongo.class);
         return true;
+
+    }
+
+    /**
+     * @param map
+     */
+    @Override
+    public void findByAggregation(Map map) {
+        List<AggregationOperation> aggs = new ArrayList<>();
+        // 先根据age筛选数据，再根据分数分组，然后统计总分
+        aggs.add(Aggregation.match(Criteria.where("age").is(map.get("age"))));
+        aggs.add(Aggregation.group("source").sum("source").as("source"));
+        Aggregation aggregation = Aggregation.newAggregation(aggs);
+        List<UserMongo> results = mongoTemplate.aggregate(aggregation, "userMongo", UserMongo.class).getMappedResults();
+        System.out.println(results);
 
     }
 

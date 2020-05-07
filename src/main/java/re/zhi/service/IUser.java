@@ -23,4 +23,6 @@ public interface IUser {
     boolean update(Map map);
 
     boolean delete(Map map);
+
+    void findByAggregation(Map map);
 }
